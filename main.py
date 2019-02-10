@@ -14,7 +14,7 @@ class NN(object):
         self.datapath = datapath
         self.model_path = model_path
         self.epsilon = 1e-6
-        self.lr = 1e-1
+        self.lr = 1
         self.tr, self.va, self.te = np.load(open(datapath, "rb"))
         self.n_epochs = 1000
         self.batch_size = 1000
@@ -27,11 +27,12 @@ class NN(object):
         if self.mode == "train":
             self.weights = {}
             all_dims = [dims[0]] + list(self.hidden_dims) + [dims[1]]
-            print(all_dims)
+            #print(all_dims)
             for layer_n in range(1, self.n_hidden + 2):
                 self.weights[f"W{layer_n}"] = np.random.rand(all_dims[layer_n - 1], all_dims[layer_n]) / 50
                 self.weights[f"b{layer_n}"] = np.zeros((1, all_dims[layer_n]))  # np.random.rand(1, all_dims[layer_n])
         elif self.mode == "test":
+            # TODO
             pass
         else:
             raise Exception("Unknown Mode!")
@@ -56,7 +57,7 @@ class NN(object):
         # TODO
         prediction[np.where(prediction < self.epsilon)] = self.epsilon
         prediction[np.where(prediction > 1 - self.epsilon)] = 1 - self.epsilon
-        return - np.sum(labels * np.log(prediction)) # / prediction.shape[0]
+        return - np.sum(labels * np.log(prediction)) / prediction.shape[0]
 
     def softmax(self, input):  #
         Z = np.exp(input - np.max(input))
